@@ -34,7 +34,7 @@ public class Main {
 							frame.repaint();
 						} catch (Exception e) {
 						}
-						Thread.sleep(10l);
+						Thread.sleep(16l);
 					}
 				} catch (Exception e) {
 				}
