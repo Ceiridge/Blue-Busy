@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JFrame;
 import org.ceiridge.intelligentconfig.ConfigContainer;
 import org.ceiridge.intelligentconfig.IntelligentConfig;
@@ -12,6 +13,7 @@ import org.ceiridge.intelligentconfig.IntelligentConfig;
 public class Main {
 
 	public static JFrame frame;
+	public static MyPanel panel;
 	public static BlueBox[] boxes = null;
 	public static IntelligentConfig config;
 	public static ConfigContainer settings;
@@ -27,7 +29,7 @@ public class Main {
 			config.save();
 		}
 		
-		frame = new MyFrame("BlueBusy - By Ceiridge");
+		frame = new JFrame("BlueBusy - By Ceiridge");
 		frame.setSize(750, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -36,8 +38,8 @@ public class Main {
 				initBoxes();
 			}
 		});
-		
 		frame.setBackground(Color.black);
+		frame.setContentPane(panel = new MyPanel());
 
 		new Thread(new Runnable() {
 
@@ -46,7 +48,7 @@ public class Main {
 				try {
 					while (true) {
 						try {
-							frame.repaint();
+							panel.repaint();
 						} catch (Exception e) {
 						}
 						Thread.sleep(16l);
