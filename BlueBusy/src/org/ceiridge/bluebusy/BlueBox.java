@@ -8,6 +8,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class BlueBox {
 	public int x, y, width, height, alpha;
+	public double mouseDiff = 1000;
+	
 	private boolean alphaRise = true;
 
 	public static Color origBlueBorder = new Color(Integer.decode(Main.settings.getString("BorderColor")));
@@ -26,18 +28,17 @@ public class BlueBox {
 
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		
+
 		g.setColor(blueBorder);
 		g2d.setComposite(AlphaComposite.Src.derive(alpha / 255f));
 
 		g.drawRect(x, y, width, height);
-		g.drawRect(x + 1, y + 1, width - 1, height - 1);
-		
-		g.setColor(blueFill);
-		g.fillRect(x + 2, y + 2, width - 2, height - 2);
 
-		blueBorder = brightenOrDarken(blueBorder, origBlueBorder);
-		blueFill = brightenOrDarken(blueFill, origBlueFill);
+		g.setColor(blueFill);
+		g.fillRect(x + 1, y + 1, width - 1, height - 1);
+
+//		blueBorder = brightenOrDarken(blueBorder, origBlueBorder, mouseDiff);
+		blueFill = brightenOrDarken(blueFill, origBlueFill, mouseDiff);
 
 		g2d.setComposite(AlphaComposite.Src);
 
@@ -52,16 +53,21 @@ public class BlueBox {
 		}
 	}
 
-	private static Color brightenOrDarken(Color c, Color orig) {
+	private static Color brightenOrDarken(Color c, Color orig, double mouseDiff) {
 		int factor = 1;
 		double diff = ((c.getRed() + c.getGreen() + c.getBlue()) * 1d / (orig.getRed() + orig.getGreen() + orig.getBlue()) * 1d) * 100d;
 
-		if (ThreadLocalRandom.current().nextBoolean() || diff < 85) {
+		if (ThreadLocalRandom.current().nextBoolean() || diff < 85 || (mouseDiff <= Main.mAura && diff < 100)) {
+			factor = mouseDiff <= Main.mAura ? (int) Math.max(1, ((Main.mAura / mouseDiff) * 5)) : factor;
 			c = new Color(Math.min(255, c.getRed() + factor), Math.min(255, c.getGreen() + factor), Math.min(255, c.getBlue() + factor));
 		} else {
 			if (diff > 120)
 				factor = 2;
 			c = new Color(Math.max(0, c.getRed() - factor), Math.max(0, c.getGreen() - factor), Math.max(0, c.getBlue() - factor));
+		}
+		
+		if(diff > 150) {
+			return orig;
 		}
 		return c;
 	}
