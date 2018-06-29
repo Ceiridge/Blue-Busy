@@ -10,8 +10,8 @@ public class BlueBox {
 	public int x, y, width, height, alpha;
 	private boolean alphaRise = true;
 
-	public static Color origBlueBorder = new Color(0x2980b9);
-	public static Color origBlueFill = new Color(0x3498db);
+	public static Color origBlueBorder = new Color(Integer.decode(Main.settings.getString("BorderColor")));
+	public static Color origBlueFill = new Color(Integer.decode(Main.settings.getString("FillColor")));
 
 	public Color blueBorder = origBlueBorder;
 	public Color blueFill = origBlueFill;
@@ -32,9 +32,8 @@ public class BlueBox {
 
 		g.drawRect(x, y, width, height);
 		g.drawRect(x + 1, y + 1, width - 1, height - 1);
+		
 		g.setColor(blueFill);
-		g2d.setComposite(AlphaComposite.Src.derive(alpha / 255f));
-
 		g.fillRect(x + 2, y + 2, width - 2, height - 2);
 
 		blueBorder = brightenOrDarken(blueBorder, origBlueBorder);
