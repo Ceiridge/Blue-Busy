@@ -9,7 +9,7 @@ public class MyPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		try {
-			Main.pDraw(g);
+//			Main.pDraw(g);
 		} catch (Throwable e) {
 		}
 	}

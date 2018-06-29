@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class BlueBox {
 	public int x, y, width, height, alpha;
 	public double mouseDiff = 1000;
-	
+
 	private boolean alphaRise = true;
 
 	public static Color origBlueBorder = new Color(Integer.decode(Main.settings.getString("BorderColor")));
@@ -32,12 +32,15 @@ public class BlueBox {
 		g.setColor(blueBorder);
 		g2d.setComposite(AlphaComposite.Src.derive(alpha / 255f));
 
-		g.drawRect(x, y, width, height);
+		int adder = 1;
+		if (x == 0 || y == 0)
+			adder = 0;
+		g.drawRect(x + adder, y + adder, width - adder, height - adder);
 
 		g.setColor(blueFill);
-		g.fillRect(x + 1, y + 1, width - 1, height - 1);
+		g.fillRect(x + adder + 1, y + adder + 1, width - adder - 1, height - adder - 1);
 
-//		blueBorder = brightenOrDarken(blueBorder, origBlueBorder, mouseDiff);
+		blueBorder = brightenOrDarken(blueBorder, origBlueBorder, mouseDiff);
 		blueFill = brightenOrDarken(blueFill, origBlueFill, mouseDiff);
 
 		g2d.setComposite(AlphaComposite.Src);
@@ -65,8 +68,8 @@ public class BlueBox {
 				factor = 2;
 			c = new Color(Math.max(0, c.getRed() - factor), Math.max(0, c.getGreen() - factor), Math.max(0, c.getBlue() - factor));
 		}
-		
-		if(diff > 150) {
+
+		if (diff > 150) {
 			return orig;
 		}
 		return c;

@@ -7,6 +7,8 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.swing.JFrame;
@@ -20,8 +22,9 @@ public class Main {
 	public static BlueBox[] boxes = null;
 	public static IntelligentConfig config;
 	public static ConfigContainer settings;
-	
+
 	public static int mAura = 0;
+	public static volatile boolean stopThreads = false;
 
 	public static void main(String[] args) throws Throwable {
 		config = new IntelligentConfig(new File("settings.bluebusy.txt"), true, false);
@@ -29,12 +32,13 @@ public class Main {
 
 		if (!settings.doesValueExist("BlocksCountDiv")) {
 			settings.setInteger("BlocksCountDiv", 15);
+			settings.setInteger("Threads", 100);
 			settings.setInteger("MouseAura", 120);
 			settings.setString("BorderColor", "0x2980b9");
 			settings.setString("FillColor", "0x3498db");
 			config.save();
 		}
-		
+
 		mAura = settings.getInteger("MouseAura");
 
 		frame = new JFrame("BlueBusy - By Ceiridge");
@@ -52,24 +56,52 @@ public class Main {
 		BufferedImage cursorI = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorI, new Point(0, 0), "Hidden Cursor");
 		panel.setCursor(cursor);
+		panel.setIgnoreRepaint(true);
 
-		new Thread(new Runnable() {
+		frame.addKeyListener(new KeyListener() {
 
 			@Override
-			public void run() {
-				try {
-					while (true) {
-						try {
-							panel.repaint();
-						} catch (Exception e) {
-						}
-						Thread.sleep(16l);
-					}
-				} catch (Exception e) {
-				}
+			public void keyTyped(KeyEvent e) {
+
 			}
 
-		}, "Repaint Thread").start();
+			@Override
+			public void keyReleased(KeyEvent e) {}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyChar() == 's') {
+					stopThreads = true;
+					try {
+						Thread.sleep(1000l);
+					} catch (InterruptedException e1) {
+					}
+					stopThreads = false;
+					final int part = boxes.length / settings.getInteger("Threads");
+					for (int i = 0; i < settings.getInteger("Threads"); i++) {
+						final int thread = i;
+
+						new Thread(new Runnable() {
+
+							@Override
+							public void run() {
+								try {
+									while (!stopThreads) {
+										try {
+											pDraw(panel.getGraphics(), part, thread);
+										} catch (Exception e) {
+										}
+										Thread.sleep(16l);
+									}
+								} catch (Exception e) {
+								}
+							}
+
+						}, "Draw Thread").start();
+					}
+				}
+			}
+		});
 	}
 
 
@@ -98,13 +130,14 @@ public class Main {
 		}
 	}
 
-	public static void pDraw(Graphics g) throws Exception {
+	public static void pDraw(Graphics g, int part, int start) throws Exception {
 		Point mousePos = panel.getMousePosition();
 
 		double mouseX = mousePos == null ? -1 : mousePos.getX();
 		double mouseY = mousePos == null ? -1 : mousePos.getY();
 
-		for (BlueBox bb : boxes) {
+		for (int i = part * start; i < (part * start) + part; i++) {
+			BlueBox bb = boxes[i];
 			if (mouseX != -1) {
 				double diffX = Math.abs(mouseX - bb.x);
 				double diffY = Math.abs(mouseY - bb.y);
