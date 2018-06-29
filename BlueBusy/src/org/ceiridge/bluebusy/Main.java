@@ -5,8 +5,6 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -45,11 +43,6 @@ public class Main {
 		frame.setSize(750, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-		frame.addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent componentEvent) {
-				initBoxes();
-			}
-		});
 		frame.setBackground(Color.white);
 		frame.setContentPane(panel = new MyPanel());
 
@@ -71,6 +64,7 @@ public class Main {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyChar() == 's') {
+					initBoxes();
 					stopThreads = true;
 					try {
 						Thread.sleep(1000l);
