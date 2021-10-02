@@ -28,7 +28,7 @@ public class Main {
 		config = new IntelligentConfig(new File("settings.bluebusy.txt"), true, false);
 		settings = config.getContainer("settings");
 
-		if (!settings.doesValueExist("BlocksCountDiv")) {
+		if (!settings.doesValueExist("BlocksCountDiv")) { // Default config
 			settings.setInteger("BlocksCountDiv", 15);
 			settings.setInteger("Threads", 100);
 			settings.setInteger("MouseAura", 120);
@@ -39,7 +39,7 @@ public class Main {
 
 		mAura = settings.getInteger("MouseAura");
 
-		frame = new JFrame("BlueBusy - By Ceiridge");
+		frame = new JFrame("BlueBusy");
 		frame.setSize(750, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);

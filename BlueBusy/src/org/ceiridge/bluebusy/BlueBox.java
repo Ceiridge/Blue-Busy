@@ -35,7 +35,7 @@ public class BlueBox {
 		int adder = 1;
 		if (x == 0 || y == 0)
 			adder = 0;
-		g.drawRect(x + adder, y + adder, width - adder, height - adder);
+		g.drawRect(x + adder, y + adder, width - adder, height - adder); // Draw blue rectangles
 
 		g.setColor(blueFill);
 		g.fillRect(x + adder + 1, y + adder + 1, width - adder - 1, height - adder - 1);
@@ -56,7 +56,7 @@ public class BlueBox {
 		}
 	}
 
-	private static Color brightenOrDarken(Color c, Color orig, double mouseDiff) {
+	private static Color brightenOrDarken(Color c, Color orig, double mouseDiff) { // Brighten or darken blue boxes depending on time and mouse movement
 		int factor = 1;
 		double diff = ((c.getRed() + c.getGreen() + c.getBlue()) * 1d / (orig.getRed() + orig.getGreen() + orig.getBlue()) * 1d) * 100d;
 

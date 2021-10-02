@@ -1,6 +1,6 @@
 # BlueBusy
 Watch an *interesting* blue animation and don't get bored.\
-(This is an old project I just made for fun.)
+(This is a very old project I just made for fun.)
 
 ## Usage
 Resize the windows and press `S` to start.
