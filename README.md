@@ -1,5 +1,9 @@
 # BlueBusy
-Watch an interesting blue animation and don't get bored - and stay busy?
+Watch an *interesting* blue animation and don't get bored.\
+(This is an old project I just made for fun.)
 
-# Dependencies
-* IntelligentConfig - by Ceiridge
+## Usage
+Resize the windows and press `S` to start.
+
+## Preview
+![Preview GIF](https://raw.githubusercontent.com/Ceiridge/Blue-Busy/master/media/preview.gif)
